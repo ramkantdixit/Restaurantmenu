@@ -1,46 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mood Cafe - Order Now</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Bootstrap 5 CDN -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     body {
       font-family: 'Poppins', sans-serif;
       background-color: #fff;
-      color: #333;
       padding: 40px 10px;
     }
     .card {
       border-radius: 12px;
-      background-color: #f9f9f9;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
       margin-bottom: 25px;
     }
+    .headline {
+      font-size: 36px;
+      font-weight: 600;
+      color: #e74c3c;
+      text-align: center;
+      margin-bottom: 30px;
+    }
     .menu-item {
-      padding: 15px;
-      margin-bottom: 10px;
+      padding: 10px;
       border-bottom: 1px solid #ddd;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-    }
-    .menu-item:hover {
-      background-color: #f1f1f1;
+      align-items: center;
     }
     .menu-item strong {
       color: #e74c3c;
     }
-    .menu-item small {
-      color: #7f8c8d;
+    .tag {
+      font-size: 12px;
+      background-color: #e74c3c;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 5px;
+      margin-left: 10px;
     }
     .submit-btn {
       background-color: #e74c3c;
       border: none;
+      color: white;
     }
     .submit-btn:hover {
       background-color: #f39c12;
@@ -49,268 +54,248 @@
       display: flex;
       align-items: center;
     }
-    .qty-control button {
-      background-color: #f39c12;
-      border: none;
-      color: white;
-      font-size: 18px;
-      padding: 0 10px;
-      border-radius: 4px;
-    }
     .qty-input {
       width: 50px;
       text-align: center;
       font-size: 18px;
-      border: 1px solid #ddd;
-      margin: 0 10px;
     }
-    h2, h4 {
-      color: #f39c12;
+    .qty-control button {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
     }
-    .logo {
-      width: 60px;
-      height: 60px;
-      object-fit: cover;
-      border-radius: 50%;
+    .qty-control button:hover {
+      background-color: #f39c12;
     }
-    .modal-header {
+    .accordion-button:not(.collapsed) {
       background-color: #f39c12;
       color: white;
     }
-    .modal-footer button {
-      background-color: #e74c3c;
-      color: white;
-    }
-    .menu-checkbox {
-      margin-right: 10px;
-    }
-    .menu-item-content {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
+    .logo {
+      width: 120px;
+      margin: 0 auto;
+      display: block;
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
+  <!-- Mood Cafe Logo -->
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEo2aODauSpsHJGYJ-NlmqawrJ7jFAISjU_jDO69KMRDkxGz6u9-6zaRhR&s=10" alt="Mood Cafe Logo" class="logo" />
+
   <div class="container">
-    <div class="card p-4 mx-auto" style="max-width: 700px;">
-      <div class="text-center mb-4">
-        <h2 class="text-center">Mood Cafe Order</h2>
+    <div class="card p-4 mx-auto" style="max-width: 800px;">
+      <div class="headline">
+        Mood Cafe Order
       </div>
 
-      <!-- Step 1: Select Items -->
-      <div id="step1">
-        <h4 class="text-center mt-4 mb-3">Step 1: Select Menu Items</h4>
+      <input type="text" class="form-control mb-3" placeholder="Search for menu items..." id="searchInput" oninput="searchItems()">
 
-        <div id="menu-items">
-          <!-- Menu items will be inserted here dynamically -->
-        </div>
+      <div class="accordion" id="menuAccordion"></div>
 
-        <!-- Next Button -->
-        <button class="btn w-100 mt-4 submit-btn" onclick="nextStep()">Next</button>
-      </div>
-
-      <!-- Step 2: Select Quantity -->
-      <div id="step2" style="display:none;">
-        <h4 class="text-center mt-4 mb-3">Step 2: Select Quantity</h4>
-        <div id="selected-items"></div>
-
-        <!-- Back Button -->
-        <button class="btn w-100 mt-4" onclick="goBackToStep1()">Back</button>
-
-        <!-- Next Button -->
-        <button class="btn w-100 mt-4 submit-btn" onclick="nextStep2()">Next</button>
-      </div>
-
-      <!-- Step 3: Review & Confirm Order -->
-      <div id="step3" style="display:none;">
-        <h4 class="text-center mt-4 mb-3">Step 3: Review Order</h4>
-        <div id="order-summary"></div>
-
-        <!-- Back Button -->
-        <button class="btn w-100 mt-4" onclick="goBackToStep2()">Back</button>
-
-        <!-- Confirm Order Button -->
-        <button class="btn w-100 mt-4 submit-btn" onclick="sendToWhatsApp()">Confirm Order</button>
-      </div>
-
+      <button class="btn w-100 mt-4 submit-btn" onclick="goToStep2()">Next</button>
     </div>
-  </div>
 
-  <!-- Modal for Name -->
-  <div class="modal fade" id="nameModal" tabindex="-1" aria-labelledby="nameModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="nameModalLabel">Enter Your Name</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <input type="text" class="form-control" id="userName" placeholder="Enter your name" required>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn submit-btn" onclick="submitName()">Submit</button>
-        </div>
+    <div class="card p-4 mx-auto" id="step2" style="max-width: 800px; display:none;">
+      <div class="headline">
+        Mood Cafe Order
       </div>
+      <h4 class="text-center mb-3">Step 2: Select Quantity</h4>
+      <div id="selected-items"></div>
+      <button class="btn w-100 mt-4" onclick="goBackToStep1()">Back</button>
+      <button class="btn w-100 mt-2 submit-btn" onclick="goToStep3()">Next</button>
     </div>
-  </div>
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="card p-4 mx-auto" id="step3" style="max-width: 800px; display:none;">
+      <div class="headline">
+        Mood Cafe Order
+      </div>
+      <h4 class="text-center mb-3">Step 3: Review Order</h4>
+      <div id="order-summary"></div>
+      <button class="btn w-100 mt-4" onclick="goBackToStep2()">Back</button>
+      <button class="btn w-100 mt-2 submit-btn" onclick="sendToWhatsApp()">Confirm Order</button>
+    </div>
 
-  <script>
-    let selectedItems = [];
-    const menuData = [
-      { name: "Veg Burger", price: 120 },
-      { name: "Pizza", price: 250 },
-      { name: "Pasta", price: 180 },
-      { name: "French Fries", price: 70 },
-      { name: "Coffee", price: 50 },
-    ];
-
-    // Load menu items dynamically
-    function loadMenuItems() {
-      const menuContainer = document.getElementById('menu-items');
-      menuData.forEach((item, index) => {
-        const menuItem = document.createElement('div');
-        menuItem.classList.add('menu-item');
-
-        menuItem.innerHTML = `
-          <div class="menu-item-content">
-            <label class="form-check-label" for="item${index}">
-              <input type="checkbox" class="form-check-input menu-checkbox" data-name="${item.name}" data-price="${item.price}" id="item${index}">
-              <span><strong>${item.name}</strong> - ₹${item.price}</span>
-            </label>
+    <div class="modal fade" id="nameModal" tabindex="-1" aria-labelledby="nameModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="nameModalLabel">Enter Your Name</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-        `;
+          <div class="modal-body">
+            <input type="text" class="form-control" id="userName" placeholder="Enter your name">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn submit-btn" onclick="submitName()">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        menuContainer.appendChild(menuItem);
-      });
-    }
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const menuData = {
+      "Burgers": [
+        { name: "Veg Burger", price: 120, tag: "Best Seller" },
+        { name: "Cheese Burger", price: 150 }
+      ],
+      "Pizzas": [
+        { name: "Margherita Pizza", price: 250 },
+        { name: "Farmhouse Pizza", price: 280, tag: "Best Seller" }
+      ],
+      "Snacks": [
+        { name: "French Fries", price: 70 },
+        { name: "Garlic Bread", price: 90 }
+      ],
+      "Drinks": [
+        { name: "Coffee", price: 50 },
+        { name: "Cold Coffee", price: 70 }
+      ]
+    };
 
-    // Show next step
-    function nextStep() {
-      const checkboxes = document.querySelectorAll('.menu-checkbox:checked');
-      if (checkboxes.length === 0) {
-        alert('Please select at least one item.');
-        return;
-      }
+    let selectedItems = [];
 
-      selectedItems = [];
-      checkboxes.forEach(checkbox => {
-        const item = {
-          name: checkbox.dataset.name,
-          price: parseInt(checkbox.dataset.price)
-        };
-        selectedItems.push(item);
-      });
-
-      // Step 1 hide, Step 2 show
-      document.getElementById('step1').style.display = 'none';
-      document.getElementById('step2').style.display = 'block';
-
-      // Display selected items for quantity selection
-      const selectedItemsContainer = document.getElementById('selected-items');
-      selectedItemsContainer.innerHTML = '';
-      selectedItems.forEach((item, index) => {
-        selectedItemsContainer.innerHTML += `
-          <div class="mb-3 row align-items-center">
-            <div class="col-6">
-              <strong>${item.name}</strong> - ₹${item.price}
-            </div>
-            <div class="col-6">
-              <div class="qty-control">
-                <button onclick="changeQuantity(${index}, -1)">-</button>
-                <input type="number" class="form-control qty-input" data-index="${index}" value="1" min="1" readonly>
-                <button onclick="changeQuantity(${index}, 1)">+</button>
+    function loadMenu() {
+      const menuAccordion = document.getElementById("menuAccordion");
+      menuAccordion.innerHTML = "";
+      Object.entries(menuData).forEach(([category, items], index) => {
+        const collapseId = `collapse${index}`;
+        const categoryHtml = `
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button ${index === 0 ? "" : "collapsed"}" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}">
+                ${category}
+              </button>
+            </h2>
+            <div id="${collapseId}" class="accordion-collapse collapse ${index === 0 ? "show" : ""}">
+              <div class="accordion-body" id="category-${category}">
+                ${items.map((item, i) => `
+                  <div class="menu-item">
+                    <label>
+                      <input type="checkbox" data-category="${category}" data-index="${i}"> 
+                      <strong>${item.name}</strong> - ₹${item.price}
+                      ${item.tag ? `<span class="tag">${item.tag}</span>` : ""}
+                    </label>
+                  </div>`).join('')}
               </div>
             </div>
-          </div>
-        `;
+          </div>`;
+        menuAccordion.innerHTML += categoryHtml;
       });
     }
 
-    // Change item quantity
-    function changeQuantity(index, change) {
-      const qtyInput = document.querySelector(`.qty-input[data-index='${index}']`);
-      let currentQty = parseInt(qtyInput.value);
-      currentQty = Math.max(1, currentQty + change); // Prevent less than 1
-      qtyInput.value = currentQty;
+    function goToStep2() {
+      selectedItems = [];
+      document.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+        const cat = cb.dataset.category;
+        const index = cb.dataset.index;
+        const item = { ...menuData[cat][index], quantity: 1 };
+        selectedItems.push(item);
+      });
+      if (selectedItems.length === 0) return alert("Please select at least one item.");
+
+      document.querySelector(".card").style.display = "none";
+      document.getElementById("step2").style.display = "block";
+      renderQuantityUI();
     }
 
-    // Show step 3 and prepare order summary
-    function nextStep2() {
-      const qtyInputs = document.querySelectorAll('.qty-input');
-      let orderSummary = [];
-      let total = 0;
+    function renderQuantityUI() {
+      const container = document.getElementById("selected-items");
+      container.innerHTML = "";
+      selectedItems.forEach((item, i) => {
+        container.innerHTML += `
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div><strong>${item.name}</strong> - ₹${item.price}</div>
+            <div class="qty-control">
+              <button onclick="updateQty(${i}, -1)">-</button>
+              <input class="form-control qty-input mx-2" value="${item.quantity}" readonly>
+              <button onclick="updateQty(${i}, 1)">+</button>
+            </div>
+          </div>`;
+      });
+    }
 
-      qtyInputs.forEach(input => {
-        const qty = parseInt(input.value);
-        const item = selectedItems[input.dataset.index];
-        item.quantity = qty;
-        const cost = item.price * qty;
-        orderSummary.push(`${item.name} x${qty} = ₹${cost}`);
+    function goToStep3() {
+      document.getElementById("step2").style.display = "none";
+      document.getElementById("step3").style.display = "block";
+      const summary = document.getElementById("order-summary");
+      let total = 0;
+      summary.innerHTML = selectedItems.map(item => {
+        const cost = item.price * item.quantity;
+        total += cost;
+        return `${item.name} x${item.quantity} = ₹${cost}`;
+      }).join("<br>") + `<br><br><strong>Total: ₹${total}</strong>`;
+    }
+
+    function goBackToStep1() {
+      document.getElementById("step2").style.display = "none";
+      document.querySelector(".card").style.display = "block";
+
+      document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        const cat = cb.dataset.category;
+        const index = cb.dataset.index;
+        cb.checked = selectedItems.some(item => item.name === menuData[cat][index].name);
+      });
+    }
+
+    function goBackToStep2() {
+      document.getElementById("step3").style.display = "none";
+      document.getElementById("step2").style.display = "block";
+    }
+
+    function updateQty(index, delta) {
+      selectedItems[index].quantity = Math.max(1, selectedItems[index].quantity + delta);
+      renderQuantityUI();
+    }
+
+    function sendToWhatsApp() {
+      const modal = new bootstrap.Modal(document.getElementById("nameModal"));
+      modal.show();
+    }
+
+    function submitName() {
+      const name = document.getElementById("userName").value;
+      if (!name) return alert("Name is required");
+      let message = `Hello, this is ${name}. I would like to order:\n\n`;
+      let total = 0;
+      selectedItems.forEach(item => {
+        const cost = item.price * item.quantity;
+        message += `${item.name} x${item.quantity} = ₹${cost}\n`;
         total += cost;
       });
-
-      // Show step 3 with order summary
-      document.getElementById('step2').style.display = 'none';
-      document.getElementById('step3').style.display = 'block';
-
-      // Display the summary
-      const orderSummaryContainer = document.getElementById('order-summary');
-      orderSummaryContainer.innerHTML = `
-        <div><strong>Order Summary:</strong></div>
-        <div>${orderSummary.join('<br>')}</div>
-        <div><strong>Total: ₹${total}</strong></div>
-      `;
-    }
-
-    // Go back to Step 1 (Select Items)
-    function goBackToStep1() {
-      document.getElementById('step2').style.display = 'none';
-      document.getElementById('step1').style.display = 'block';
-    }
-
-    // Go back to Step 2 (Select Quantity)
-    function goBackToStep2() {
-      document.getElementById('step3').style.display = 'none';
-      document.getElementById('step2').style.display = 'block';
-    }
-
-    // Open modal to enter name
-    function sendToWhatsApp() {
-      const nameModal = new bootstrap.Modal(document.getElementById('nameModal'));
-      nameModal.show();
-    }
-
-    // Submit Name
-    function submitName() {
-      const name = document.getElementById('userName').value;
-      if (!name) {
-        alert('Name is required.');
-        return;
-      }
-
-      let message = `Hello, this is ${name}. I would like to place the following order from Mood Cafe:\n\n`;
-
-      const qtyInputs = document.querySelectorAll('.qty-input');
-      qtyInputs.forEach(input => {
-        const item = selectedItems[input.dataset.index];
-        message += `${item.name} x${item.quantity} = ₹${item.price * item.quantity}\n`;
-      });
-
-      const total = selectedItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
       message += `\nTotal: ₹${total}`;
-
       const phoneNumber = "919120204059";
-      const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-      window.open(whatsappURL, '_blank');
+      const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
     }
 
-    // Load the menu items when the page is loaded
-    window.onload = loadMenuItems;
+    function searchItems() {
+      const query = document.getElementById("searchInput").value.toLowerCase();
+      document.querySelectorAll('.accordion-collapse').forEach(c => c.classList.remove("show"));
+
+      Object.entries(menuData).forEach(([category, items], index) => {
+        const collapse = document.getElementById(`collapse${index}`);
+        let matched = false;
+        items.forEach((item, i) => {
+          const itemDiv = document.querySelector(`#category-${category} .menu-item:nth-child(${i + 1})`);
+          if (item.name.toLowerCase().includes(query)) {
+            matched = true;
+            itemDiv.style.display = "flex";
+          } else {
+            itemDiv.style.display = "none";
+          }
+        });
+        if (matched) collapse.classList.add("show");
+        else collapse.classList.remove("show");
+      });
+    }
+
+    window.onload = loadMenu;
   </script>
 </body>
 </html>
