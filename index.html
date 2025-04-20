@@ -31,6 +31,12 @@
       justify-content: space-between;
       align-items: center;
     }
+    .menu-item label {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
     .menu-item strong {
       color: #e74c3c;
     }
@@ -40,7 +46,7 @@
       color: white;
       padding: 2px 6px;
       border-radius: 5px;
-      margin-left: 10px;
+      flex-shrink: 0;
     }
     .submit-btn {
       background-color: #e74c3c;
@@ -92,7 +98,9 @@
       </div>
 
       <input type="text" class="form-control mb-3" placeholder="Search for menu items..." id="searchInput" oninput="searchItems()">
-
+      <div id="selection-error" class="text-danger text-center mb-2" style="display: none;">
+        Please select at least one item.
+      </div>
       <div class="accordion" id="menuAccordion"></div>
 
       <button class="btn w-100 mt-4 submit-btn" onclick="goToStep2()">Next</button>
@@ -135,6 +143,7 @@
         </div>
       </div>
     </div>
+
     <div class="text-center mt-5" style="font-size: 14px; color: #777;">
       © Mood Cafe. Developed by Ram Kant Dixit.
     </div>
@@ -180,7 +189,7 @@
                 ${items.map((item, i) => `
                   <div class="menu-item">
                     <label>
-                      <input type="checkbox" data-category="${category}" data-index="${i}"> 
+                      <input type="checkbox" data-category="${category}" data-index="${i}">
                       <strong>${item.name}</strong> - ₹${item.price}
                       ${item.tag ? `<span class="tag">${item.tag}</span>` : ""}
                     </label>
@@ -200,7 +209,14 @@
         const item = { ...menuData[cat][index], quantity: 1 };
         selectedItems.push(item);
       });
-      if (selectedItems.length === 0) return alert("Please select at least one item.");
+
+      const errorDiv = document.getElementById("selection-error");
+      if (selectedItems.length === 0) {
+        errorDiv.style.display = "block";
+        return;
+      } else {
+        errorDiv.style.display = "none";
+      }
 
       document.querySelector(".card").style.display = "none";
       document.getElementById("step2").style.display = "block";
