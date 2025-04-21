@@ -84,14 +84,13 @@
   </style>
 </head>
 <body>
-  <!-- Mood Cafe Logo -->
   <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEo2aODauSpsHJGYJ-NlmqawrJ7jFAISjU_jDO69KMRDkxGz6u9-6zaRhR&s=10" alt="Mood Cafe Logo" class="logo" />
 
   <div class="container">
     <!-- Step 1 -->
     <div class="card p-4 mx-auto" style="max-width: 800px;" id="step1">
       <div class="headline">Mood Cafe Order</div>
-         <div class="text-center fw-bold text-secondary mb-2 welcome-name"></div>
+      <div class="text-center fw-bold text-secondary mb-2 welcome-name"></div>
       <input type="text" class="form-control mb-3" placeholder="Search for menu items..." id="searchInput" oninput="searchItems()">
       <div class="accordion" id="menuAccordion"></div>
       <div class="d-flex justify-content-between mt-4">
@@ -141,7 +140,6 @@
       </div>
     </div>
 
-    <!-- Footer -->
     <div class="text-center mt-5" style="font-size: 14px; color: #777;">
       © Mood Cafe. Developed by Ram Kant Dixit.
     </div>
@@ -187,7 +185,7 @@
                 ${items.map((item, i) => `
                   <div class="menu-item">
                     <label>
-                      <input type="checkbox" data-category="${category}" data-index="${i}"> 
+                      <input type="checkbox" data-category="${category}" data-index="${i}">
                       <strong>${item.name}</strong> - ₹${item.price}
                       ${item.tag ? `<span class="tag">${item.tag}</span>` : ""}
                     </label>
@@ -234,11 +232,39 @@
       document.getElementById("step3").style.display = "block";
       const summary = document.getElementById("order-summary");
       let total = 0;
-      summary.innerHTML = selectedItems.map(item => {
-        const cost = item.price * item.quantity;
-        total += cost;
-        return `${item.name} x${item.quantity} = ₹${cost}`;
-      }).join("<br>") + `<br><br><strong>Total: ₹${total}</strong>`;
+
+      let tableHTML = `
+        <div class="table-responsive">
+          <table class="table table-bordered text-center">
+            <thead class="table-warning">
+              <tr>
+                <th>Item</th>
+                <th>Qty</th>
+                <th>Price (₹)</th>
+                <th>Subtotal (₹)</th>
+              </tr>
+            </thead>
+            <tbody>`;
+
+      selectedItems.forEach(item => {
+        const subtotal = item.price * item.quantity;
+        total += subtotal;
+        tableHTML += `
+          <tr>
+            <td>${item.name}</td>
+            <td>${item.quantity}</td>
+            <td>${item.price}</td>
+            <td>${subtotal}</td>
+          </tr>`;
+      });
+
+      tableHTML += `
+            </tbody>
+          </table>
+        </div>
+        <div class="text-end fs-5 fw-bold mt-3">Total: ₹${total}</div>`;
+
+      summary.innerHTML = tableHTML;
     }
 
     function goBackToStep1() {
