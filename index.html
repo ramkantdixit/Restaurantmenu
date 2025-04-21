@@ -22,7 +22,7 @@
       font-weight: 600;
       color: #e74c3c;
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 10px;
     }
     .menu-item {
       padding: 10px;
@@ -88,25 +88,21 @@
   <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEo2aODauSpsHJGYJ-NlmqawrJ7jFAISjU_jDO69KMRDkxGz6u9-6zaRhR&s=10" alt="Mood Cafe Logo" class="logo" />
 
   <div class="container">
-    <div class="card p-4 mx-auto" style="max-width: 800px;">
-      <div class="headline">
-        Mood Cafe Order
-      </div>
-
+    <!-- Step 1 -->
+    <div class="card p-4 mx-auto" style="max-width: 800px;" id="step1">
+      <div class="headline">Mood Cafe Order</div>
+         <div class="text-center fw-bold text-secondary mb-2 welcome-name"></div>
       <input type="text" class="form-control mb-3" placeholder="Search for menu items..." id="searchInput" oninput="searchItems()">
-
       <div class="accordion" id="menuAccordion"></div>
-
       <div class="d-flex justify-content-between mt-4">
         <button class="btn btn-secondary w-50 me-2" onclick="clearSelections()">Clear</button>
         <button class="btn submit-btn w-50" onclick="goToStep2()">Next</button>
       </div>
     </div>
 
+    <!-- Step 2 -->
     <div class="card p-4 mx-auto" id="step2" style="max-width: 800px; display:none;">
-      <div class="headline">
-        Mood Cafe Order
-      </div>
+      <div class="headline">Mood Cafe Order</div>
       <h4 class="text-center mb-3">Step 2: Select Quantity</h4>
       <div id="selected-items"></div>
       <div class="d-flex justify-content-between mt-4">
@@ -115,18 +111,18 @@
       </div>
     </div>
 
+    <!-- Step 3 -->
     <div class="card p-4 mx-auto" id="step3" style="max-width: 800px; display:none;">
-      <div class="headline">
-        Mood Cafe Order
-      </div>
+      <div class="headline">Mood Cafe Order</div>
       <h4 class="text-center mb-3">Step 3: Review Order</h4>
       <div id="order-summary"></div>
-      <div class="d-flex justify-content-between mt-2">
+      <div class="d-flex justify-content-between mt-4">
         <button class="btn btn-secondary w-50 me-2" onclick="goBackToStep2()">Back</button>
         <button class="btn submit-btn w-50" onclick="sendToWhatsApp()">Confirm Order</button>
       </div>
     </div>
 
+    <!-- Name Modal -->
     <div class="modal fade" id="nameModal" tabindex="-1" aria-labelledby="nameModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -144,6 +140,8 @@
         </div>
       </div>
     </div>
+
+    <!-- Footer -->
     <div class="text-center mt-5" style="font-size: 14px; color: #777;">
       © Mood Cafe. Developed by Ram Kant Dixit.
     </div>
@@ -210,8 +208,7 @@
         selectedItems.push(item);
       });
       if (selectedItems.length === 0) return alert("Please select at least one item.");
-
-      document.querySelector(".card").style.display = "none";
+      document.getElementById("step1").style.display = "none";
       document.getElementById("step2").style.display = "block";
       renderQuantityUI();
     }
@@ -246,8 +243,7 @@
 
     function goBackToStep1() {
       document.getElementById("step2").style.display = "none";
-      document.querySelector(".card").style.display = "block";
-
+      document.getElementById("step1").style.display = "block";
       document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
         const cat = cb.dataset.category;
         const index = cb.dataset.index;
@@ -271,8 +267,12 @@
     }
 
     function submitName() {
-      const name = document.getElementById("userName").value;
+      const name = document.getElementById("userName").value.trim();
       if (!name) return alert("Name is required");
+
+      localStorage.setItem("userName", name);
+      displayWelcome(name);
+
       let message = `Hello, this is ${name}. I would like to order:\n\n`;
       let total = 0;
       selectedItems.forEach(item => {
@@ -280,9 +280,8 @@
         message += `${item.name} x${item.quantity} = ₹${cost}\n`;
         total += cost;
       });
-      message += `\nTotal: ₹${total}\n\n`;
-      message += `You can pay via UPI here: [Pay via UPI](upi://pay?pa=Kantram1@ybl&pn=Mood%20Cafe&mc=0000&tid=1234567890&tr=9876543210&cu=INR&am=${total})\n\n`;
-      message += `Please confirm after completing the payment.`;
+      message += `\nTotal: ₹${total}\n\nPayment Link:\nupi://pay?pa=Kantram1@ybl&pn=MoodCafe&cu=INR&am=${total}`;
+
       const phoneNumber = "919120204059";
       const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
       window.open(url, '_blank');
@@ -291,7 +290,6 @@
     function searchItems() {
       const query = document.getElementById("searchInput").value.toLowerCase();
       document.querySelectorAll('.accordion-collapse').forEach(c => c.classList.remove("show"));
-
       Object.entries(menuData).forEach(([category, items], index) => {
         const collapse = document.getElementById(`collapse${index}`);
         let matched = false;
@@ -313,7 +311,20 @@
       document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
     }
 
-    loadMenu();
+    function displayWelcome(name) {
+      document.querySelectorAll(".welcome-name").forEach(el => {
+        el.textContent = `Welcome, ${name}`;
+      });
+    }
+
+    window.onload = function () {
+      loadMenu();
+      const savedName = localStorage.getItem("userName");
+      if (savedName) {
+        document.getElementById("userName").value = savedName;
+        displayWelcome(savedName);
+      }
+    };
   </script>
 </body>
 </html>
