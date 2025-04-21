@@ -110,8 +110,8 @@
       <h4 class="text-center mb-3">Step 2: Select Quantity</h4>
       <div id="selected-items"></div>
       <div class="d-flex justify-content-between mt-4">
-      <button class="btn btn-secondary w-50 me-2" onclick="goBackToStep1()">Back</button>
-      <button class="btn submit-btn w-50" onclick="goToStep3()">Next</button>
+        <button class="btn btn-secondary w-50 me-2" onclick="goBackToStep1()">Back</button>
+        <button class="btn submit-btn w-50" onclick="goToStep3()">Next</button>
       </div>
     </div>
 
@@ -121,9 +121,9 @@
       </div>
       <h4 class="text-center mb-3">Step 3: Review Order</h4>
       <div id="order-summary"></div>
-      <div class="d-flex justify-content-between mt-4">
-      <button class="btn btn-secondary w-50 me-2" onclick="goBackToStep2()">Back</button>
-      <button class="btn submit-btn w-50" onclick="sendToWhatsApp()">Confirm Order</button>
+      <div class="d-flex justify-content-between mt-2">
+        <button class="btn btn-secondary w-50 me-2" onclick="goBackToStep2()">Back</button>
+        <button class="btn submit-btn w-50" onclick="sendToWhatsApp()">Confirm Order</button>
       </div>
     </div>
 
@@ -280,7 +280,9 @@
         message += `${item.name} x${item.quantity} = ₹${cost}\n`;
         total += cost;
       });
-      message += `\nTotal: ₹${total}`;
+      message += `\nTotal: ₹${total}\n\n`;
+      message += `You can pay via UPI here: [Pay via UPI](upi://pay?pa=Kantram1@ybl&pn=Mood%20Cafe&mc=0000&tid=1234567890&tr=9876543210&cu=INR&am=${total})\n\n`;
+      message += `Please confirm after completing the payment.`;
       const phoneNumber = "919120204059";
       const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
       window.open(url, '_blank');
@@ -311,7 +313,7 @@
       document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
     }
 
-    window.onload = loadMenu;
+    loadMenu();
   </script>
 </body>
 </html>
